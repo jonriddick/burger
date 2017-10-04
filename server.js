@@ -23,7 +23,7 @@ var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
   password: "",
-  database: "burgers_db"
+  database: "burger_db"
 });
 
 connection.connect(function(err) {
@@ -37,25 +37,54 @@ connection.connect(function(err) {
 
 // Serve index.handlebars to the root route.
 app.get("/", function(req, res) {
-  
+  connection.query("SELECT * FROM burgers;", function(err, data) {
+    if (err) {
+      return res.status(500).end();
+    }
+    res.render("index", { burgers: data });
+  });
 });
 
 
 // Get the api for all the burgers
 app.get("/api/burgers", function(req, res) {
-  
+  connection.query("SELECT * FROM burgers;", function(err, data) {
+    if (err) {
+      return res.status(500).end();
+    }
+
+    res.json(data);
+  });
 });
 
 
 // Update a burger
 app.put("/burgers", function(req, res) {
-
+	connection.query("UPDATE burgers SET devoured = ? WHERE id = ?", [req.body.devoured, req.body.id], function(err, result) {
+    if (err) {
+      // If an error occurred, send a generic server faliure
+      return res.status(500).end();
+    } else if (result.changedRows == 0) {
+      // If no rows were changed, then the ID must not exist, so 404
+      return res.status(404).end();
+    } else {
+      res.status(200).end();
+    }
+  });
 });
 
 
 // Create a burger
 app.post("/burgers", function(req, res) {
-  
+  connection.query("INSERT INTO burgers (burger_name, devoured) VALUES (?, 1)", [req.body.burger_name], function(err, result) {
+    if (err) {
+      return res.status(500).end();
+    }
+
+    // Send back the ID of the new todo
+    res.json({ id: result.insertId });
+    console.log({ id: result.insertId });
+  });
 });
 
 
