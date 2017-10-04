@@ -22,7 +22,7 @@ var mysql = require("mysql");
 var connection = mysql.createConnection({
   host: "localhost",
   user: "root",
-  password: "",
+  password: "Sundrop7@",
   database: "burger_db"
 });
 
@@ -76,7 +76,7 @@ app.put("/burgers", function(req, res) {
 
 // Create a burger
 app.post("/burgers", function(req, res) {
-  connection.query("INSERT INTO burgers (burger_name, devoured) VALUES (?, 1)", [req.body.burger_name], function(err, result) {
+  connection.query("INSERT INTO burgers (burger_name, devoured) VALUES (?, 0)", [req.body.burger_name], function(err, result) {
     if (err) {
       return res.status(500).end();
     }
