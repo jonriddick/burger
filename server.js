@@ -19,20 +19,29 @@ app.set("view engine", "handlebars");
 var mysql = require("mysql");
 
 //Needs password
-var connection = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "Sundrop7@",
-  database: "burger_db"
-});
+var connection;
 
-connection.connect(function(err) {
-  if (err) {
-    console.error("error connecting: " + err.stack);
-    return;
-  }
-  console.log("connected as id " + connection.threadId);
-});
+// connection.connect(function(err) {
+//   if (err) {
+//     console.error("error connecting: " + err.stack);
+//     return;
+//   }
+//   console.log("connected as id " + connection.threadId);
+// });
+
+if (process.env.JAWSDB_URL) {
+  connection = mysql.createConnection(process.env.JAWSDB_URL);
+} else {
+  connection = mysql.createConnection({
+    host: "localhost",
+    user: "root",
+    password: "",
+    database: "burger_db"
+  });
+};
+
+
+
 
 
 // Serve index.handlebars to the root route.
@@ -92,3 +101,6 @@ app.post("/burgers", function(req, res) {
 app.listen(port, function() {
   console.log("Listening on PORT " + port);
 });
+
+connection.connect();
+module.exports = connection;
