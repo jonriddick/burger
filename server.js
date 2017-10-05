@@ -102,5 +102,5 @@ app.listen(port, function() {
   console.log("Listening on PORT " + port);
 });
 
-connection.connect();
-module.exports = connection;
+// connection.connect();
+// module.exports = connection;
